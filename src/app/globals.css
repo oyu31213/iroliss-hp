@@ -127,3 +127,25 @@
     @apply font-sans;
   }
 }
+
+/* ─── Iroliss Design Tokens ─────────────────────────────────── */
+:root {
+  --ink:          #1C1C1C;
+  --ink-sub:      #6B6B6B;
+  --bg:           #F6F4F9;
+  --bg-white:     #FFFFFF;
+  --purple:       #5B3D8A;
+  --purple-mid:   #7B5BB0;
+  --purple-light: #EEE8F8;
+  --il-border:    #E2DAF0;
+  --green:        #3D7A5F;
+  --green-light:  #EAF3EE;
+}
+
+/* Font family utilities */
+.font-dm-sans {
+  font-family: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+.font-noto {
+  font-family: var(--font-noto-sans-jp), ui-sans-serif, system-ui, sans-serif;
+}
