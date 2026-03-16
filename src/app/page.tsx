@@ -398,7 +398,7 @@ function ContactModal({
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, company, department, name, email, phone, employees, message }),
+        body: JSON.stringify({ type, company, department, name, email, phone, employees, message, honeypot: "" }),
       });
       const data = await res.json();
       if (!res.ok) {

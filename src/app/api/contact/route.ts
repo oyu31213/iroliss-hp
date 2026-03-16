@@ -1,10 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { type, company, department, name, email, phone, employees, message } =
-      body as Record<string, string>;
+    const {
+      type,
+      company,
+      department,
+      name,
+      email,
+      phone,
+      employees,
+      message,
+      honeypot,
+    } = body as Record<string, string>;
+
+    // ボット対策：隠しフィールドに値が入っていたらスパムとして無視
+    if (honeypot) {
+      return NextResponse.json({ ok: true });
+    }
 
     if (!company?.trim() || !name?.trim() || !email?.trim()) {
       return NextResponse.json(
@@ -13,6 +35,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const e = (s: string) => escapeHtml(s);
     const html = `
 <!DOCTYPE html>
 <html lang="ja">
@@ -23,35 +46,35 @@ export async function POST(req: NextRequest) {
   <table style="width:100%;border-collapse:collapse;margin-top:16px;font-size:14px">
     <tr>
       <td style="padding:10px 8px;background:#F6F4F9;font-weight:600;width:140px">種別</td>
-      <td style="padding:10px 12px">${type}</td>
+      <td style="padding:10px 12px">${e(type)}</td>
     </tr>
     <tr>
       <td style="padding:10px 8px;font-weight:600">会社名</td>
-      <td style="padding:10px 12px">${company}</td>
+      <td style="padding:10px 12px">${e(company)}</td>
     </tr>
     <tr>
       <td style="padding:10px 8px;background:#F6F4F9;font-weight:600">部署名</td>
-      <td style="padding:10px 12px">${department || "—"}</td>
+      <td style="padding:10px 12px">${e(department || "—")}</td>
     </tr>
     <tr>
       <td style="padding:10px 8px;font-weight:600">担当者名</td>
-      <td style="padding:10px 12px">${name}</td>
+      <td style="padding:10px 12px">${e(name)}</td>
     </tr>
     <tr>
       <td style="padding:10px 8px;background:#F6F4F9;font-weight:600">メールアドレス</td>
-      <td style="padding:10px 12px"><a href="mailto:${email}">${email}</a></td>
+      <td style="padding:10px 12px"><a href="mailto:${e(email)}">${e(email)}</a></td>
     </tr>
     <tr>
       <td style="padding:10px 8px;font-weight:600">電話番号</td>
-      <td style="padding:10px 12px">${phone || "—"}</td>
+      <td style="padding:10px 12px">${e(phone || "—")}</td>
     </tr>
     <tr>
       <td style="padding:10px 8px;background:#F6F4F9;font-weight:600">従業員規模</td>
-      <td style="padding:10px 12px">${employees || "—"}</td>
+      <td style="padding:10px 12px">${e(employees || "—")}</td>
     </tr>
     <tr>
       <td style="padding:10px 8px;font-weight:600;vertical-align:top">ご質問・ご要望</td>
-      <td style="padding:10px 12px;white-space:pre-wrap">${message || "—"}</td>
+      <td style="padding:10px 12px;white-space:pre-wrap">${e(message || "—")}</td>
     </tr>
   </table>
   <p style="margin-top:24px;font-size:12px;color:#9ca3af">
