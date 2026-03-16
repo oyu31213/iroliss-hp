@@ -76,8 +76,7 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // ドメイン認証後は from を "noreply@iroliss.com" に変更
-        from: "Iroliss LP <onboarding@resend.dev>",
+        from: "Iroliss LP <noreply@iroliss.com>",
         to: "info@iroliss.com",
         reply_to: email,
         subject: `【${type}】${company}・${name}様`,
