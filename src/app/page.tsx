@@ -107,80 +107,120 @@ function Nav() {
 
 // ─── Device Mockups ───────────────────────────────────────────
 function DeviceMockups() {
+  const auditLog = [
+    { label: "受付", date: "2024-12-20 10:30:00", desc: "顧客からのWeb申請を受付", done: true },
+    { label: "書類確認開始", date: "2024-12-20 11:00:00", desc: "提出書類の確認作業を開始", done: true },
+    { label: "AI自動検証", date: "2024-12-20 11:15:00", desc: "全書類のOCR処理と自動検証を完了", done: true },
+    { label: "不備検出", date: "2024-12-20 14:30:00", desc: "死亡診断書の記載日付に不備を検出", done: false },
+    { label: "処理完了", date: "2024-12-24 15:30:00", desc: "すべての手続きが完了し、解約処理が正常に終了しました", done: true, final: true },
+  ];
+
   return (
-    <div className="relative flex justify-center">
-      {/* Laptop */}
-      <div className="relative" style={{ maxWidth: 440, width: "100%" }}>
-        {/* Screen shell */}
+    <div className="relative flex justify-center" style={{ paddingBottom: 60 }}>
+      {/* ── Laptop ── */}
+      <div className="relative" style={{ maxWidth: 480, width: "100%" }}>
+        {/* Lid / screen */}
         <div
-          className="rounded-t-xl p-2"
-          style={{ background: "#2A2535", border: "2px solid #3D3650" }}
+          className="overflow-hidden rounded-t-2xl"
+          style={{
+            background: "linear-gradient(145deg, #e8e8e8, #d0d0d0)",
+            padding: "10px 10px 0",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.25)",
+          }}
         >
-          {/* Top bar */}
+          {/* Bezel */}
           <div
-            className="mb-2 flex items-center gap-2 rounded-md px-3 py-1.5"
-            style={{ background: "#1A1525" }}
+            className="overflow-hidden rounded-t-lg"
+            style={{ background: "#111", padding: "6px 6px 0" }}
           >
-            <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#FF6058" }} />
-            <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#FFBD2E" }} />
-            <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#28CA41" }} />
-            <div
-              className="ml-2 flex-1 rounded px-2 py-0.5 text-center text-xs"
-              style={{ background: "#2A2535", color: "#9B8EC4" }}
-            >
-              admin.iroliss.com
-            </div>
-          </div>
-          {/* Screen content — dashboard mockup */}
-          <div
-            className="overflow-hidden rounded"
-            style={{ height: 200, background: "#1E1630" }}
-          >
-            <div className="flex h-full">
+            {/* Screen content — light UI */}
+            <div style={{ height: 260, background: "#f5f5f7", overflowY: "hidden" }}>
+              {/* App header */}
               <div
-                className="w-36 p-3"
-                style={{ background: "#150F25", borderRight: "1px solid #2D2450" }}
+                className="flex items-center gap-2 border-b px-3 py-2"
+                style={{ background: "#fff", borderColor: "#e5e7eb" }}
               >
-                <div
-                  className="mb-3 rounded px-2 py-1 text-xs font-medium text-white"
-                  style={{ background: "var(--purple)" }}
-                >
-                  ダッシュボード
-                </div>
-                {["申請一覧", "書類確認", "設定"].map((item) => (
-                  <div key={item} className="mb-1 rounded px-2 py-1 text-xs" style={{ color: "#9B8EC4" }}>
-                    {item}
-                  </div>
-                ))}
+                <span className="text-sm font-bold" style={{ color: "#1C1C1C" }}>Shinoby</span>
+                <span className="text-xs" style={{ color: "#9ca3af" }}>解約・名義変更管理システム</span>
               </div>
-              <div className="flex-1 p-3">
-                <div className="mb-2 grid grid-cols-3 gap-2">
-                  {[
-                    { label: "処理中", val: "12", color: "#7B5BB0" },
-                    { label: "完了", val: "48", color: "#3D7A5F" },
-                    { label: "差戻し", val: "2", color: "#E05C5C" },
-                  ].map((s) => (
-                    <div key={s.label} className="rounded p-2 text-center" style={{ background: "#2A2045" }}>
-                      <div className="text-lg font-bold" style={{ color: s.color }}>{s.val}</div>
-                      <div className="text-xs" style={{ color: "#9B8EC4" }}>{s.label}</div>
+              {/* Back + title */}
+              <div className="px-3 pt-2 pb-1 border-b" style={{ background: "#fff", borderColor: "#e5e7eb" }}>
+                <div className="text-xs mb-0.5" style={{ color: "#6B7280" }}>← 詳細に戻る</div>
+                <div className="text-sm font-bold" style={{ color: "#1C1C1C" }}>解約完了・監査ログ - C2024-001</div>
+                <div className="text-xs" style={{ color: "#9ca3af" }}>処理完了の記録と証跡</div>
+              </div>
+              {/* Body — two columns */}
+              <div className="flex gap-0" style={{ height: 185 }}>
+                {/* Left panel */}
+                <div
+                  className="flex-none overflow-hidden border-r p-3"
+                  style={{ width: 180, borderColor: "#e5e7eb", background: "#fff" }}
+                >
+                  {/* Status badge */}
+                  <div className="mb-2 flex items-center gap-1.5">
+                    <span
+                      className="flex h-4 w-4 items-center justify-center rounded-full text-white"
+                      style={{ background: "#22c55e", fontSize: 8 }}
+                    >✓</span>
+                    <div>
+                      <div className="text-xs font-medium" style={{ color: "#6B7280" }}>ステータス</div>
+                      <div className="text-xs font-bold" style={{ color: "#1C1C1C" }}>処理完了</div>
                     </div>
-                  ))}
+                  </div>
+                  <div className="space-y-1.5 border-t pt-2" style={{ borderColor: "#e5e7eb" }}>
+                    {[
+                      { label: "完了日", val: "2024-12-24 15:30:00" },
+                      { label: "対応者", val: "山田 太郎" },
+                      { label: "処理日数", val: "4日" },
+                    ].map((r) => (
+                      <div key={r.label}>
+                        <div className="text-xs" style={{ color: "#9ca3af", fontSize: 9 }}>{r.label}</div>
+                        <div className="text-xs font-medium" style={{ color: "#1C1C1C", fontSize: 10 }}>{r.val}</div>
+                      </div>
+                    ))}
+                    <div className="border-t pt-1.5" style={{ borderColor: "#e5e7eb" }}>
+                      <div className="text-xs font-medium mb-0.5" style={{ color: "#6B7280", fontSize: 9 }}>解約対象</div>
+                      {[
+                        { label: "被相続人", val: "田中 一郎" },
+                        { label: "申請者", val: "田中 花子（配）" },
+                      ].map((r) => (
+                        <div key={r.label}>
+                          <div className="text-xs" style={{ color: "#9ca3af", fontSize: 9 }}>{r.label}</div>
+                          <div className="text-xs font-medium" style={{ color: "#1C1C1C", fontSize: 10 }}>{r.val}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div className="rounded p-2" style={{ background: "#2A2045" }}>
-                  {[
-                    { name: "山田 花子", status: "書類確認待ち" },
-                    { name: "佐藤 一郎", status: "完了" },
-                    { name: "鈴木 次郎", status: "処理中" },
-                  ].map((r) => (
-                    <div
-                      key={r.name}
-                      className="flex justify-between border-b py-1 text-xs last:border-0"
-                      style={{ borderColor: "#3D3060", color: "#C4B8E0" }}
-                    >
-                      <span>{r.name}</span>
-                      <span style={{ color: "#9B8EC4" }}>{r.status}</span>
-                    </div>
-                  ))}
+                {/* Right panel — audit log */}
+                <div className="flex-1 overflow-hidden p-3" style={{ background: "#f5f5f7" }}>
+                  <div className="mb-2 text-xs font-bold" style={{ color: "#1C1C1C" }}>監査ログ（時系列）</div>
+                  <div className="space-y-1.5">
+                    {auditLog.map((item) => (
+                      <div key={item.label} className="flex gap-2">
+                        <div className="flex flex-col items-center">
+                          <span
+                            className="h-2 w-2 rounded-full shrink-0 mt-0.5"
+                            style={{ background: item.final ? "#22c55e" : item.done ? "#3b82f6" : "#d1d5db" }}
+                          />
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium" style={{ color: "#1C1C1C", fontSize: 9 }}>{item.label}</div>
+                          <div style={{ color: "#9ca3af", fontSize: 8 }}>{item.date}</div>
+                          <div
+                            className="rounded px-1 py-0.5 text-xs"
+                            style={{
+                              fontSize: 8,
+                              color: item.final ? "#166534" : "#374151",
+                              background: item.final ? "#dcfce7" : "transparent",
+                            }}
+                          >
+                            {item.desc}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -188,51 +228,122 @@ function DeviceMockups() {
         </div>
         {/* Hinge */}
         <div
-          className="mx-auto h-2 w-3/4"
-          style={{ background: "linear-gradient(to bottom, #3D3650, #2A2535)" }}
+          style={{
+            height: 6,
+            background: "linear-gradient(to bottom, #c8c8c8, #b0b0b0)",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+          }}
         />
         {/* Base */}
         <div
-          className="mx-auto h-3 w-5/6 rounded-b-lg"
-          style={{ background: "linear-gradient(to bottom, #2A2535, #1A1525)" }}
+          className="mx-auto rounded-b-xl"
+          style={{
+            height: 16,
+            width: "90%",
+            background: "linear-gradient(to bottom, #d8d8d8, #c0c0c0)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+          }}
         />
 
-        {/* Smartphone — overlapping bottom-right */}
+        {/* ── Smartphone — overlapping bottom-right ── */}
         <div
-          className="absolute right-0 z-10"
-          style={{ width: 160, bottom: -40 }}
+          className="absolute z-10"
+          style={{ width: 148, bottom: -48, right: -8 }}
         >
           <div
-            className="overflow-hidden rounded-2xl"
-            style={{ background: "#1A1525", border: "2px solid #3D3650", paddingTop: 8, paddingBottom: 8 }}
+            className="overflow-hidden rounded-3xl"
+            style={{
+              background: "#111",
+              border: "2px solid #333",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+            }}
           >
             {/* Notch */}
-            <div className="mb-1 flex justify-center">
-              <div className="h-1 w-16 rounded-full" style={{ background: "#3D3650" }} />
+            <div className="flex justify-center py-1.5" style={{ background: "#111" }}>
+              <div className="h-2 w-14 rounded-full" style={{ background: "#333" }} />
             </div>
-            {/* Chat screen */}
-            <div className="overflow-hidden px-2" style={{ height: 180, background: "#120E20" }}>
-              <div className="pt-2 text-xs" style={{ color: "#9B8EC4" }}>
-                <div className="mb-1 text-center" style={{ fontSize: 10 }}>Shinoby</div>
-                {[
-                  { me: false, text: "必要書類を教えてください" },
-                  { me: true, text: "死亡診断書・戸籍謄本・通帳のコピーをご用意ください" },
-                  { me: false, text: "わかりました" },
-                ].map((msg, i) => (
-                  <div key={i} className={`mb-1.5 flex ${msg.me ? "justify-end" : "justify-start"}`}>
-                    <div
-                      className="max-w-[90%] rounded-lg px-2 py-1 text-white"
-                      style={{ background: msg.me ? "var(--purple)" : "#2A2045", fontSize: 9 }}
-                    >
-                      {msg.text}
-                    </div>
+            {/* Screen */}
+            <div style={{ background: "#fff", minHeight: 220 }}>
+              {/* App header */}
+              <div
+                className="flex items-center gap-1.5 border-b px-2 py-1.5"
+                style={{ borderColor: "#e5e7eb" }}
+              >
+                <div
+                  className="flex h-5 w-5 items-center justify-center rounded"
+                  style={{ background: "var(--purple)" }}
+                >
+                  <span className="text-white font-bold" style={{ fontSize: 8 }}>S</span>
+                </div>
+                <div>
+                  <div className="font-bold" style={{ fontSize: 9, color: "#1C1C1C" }}>Shinoby AIアシスタント</div>
+                  <div style={{ fontSize: 7, color: "#9ca3af" }}>お手続きをサポートします</div>
+                </div>
+              </div>
+              {/* Chat */}
+              <div className="px-2 pt-2 space-y-1.5">
+                {/* AI bubble */}
+                <div className="flex gap-1">
+                  <div className="h-4 w-4 rounded-full shrink-0 flex items-center justify-center" style={{ background: "var(--purple)" }}>
+                    <span className="text-white" style={{ fontSize: 7 }}>A</span>
                   </div>
-                ))}
+                  <div className="rounded-lg rounded-tl-none px-2 py-1.5 text-white" style={{ background: "var(--purple)", fontSize: 8, maxWidth: "85%" }}>
+                    こんにちは。Shinobyです。この度はご悲傷様でございます。お手続きのお手伝いをさせていただきます。
+                  </div>
+                </div>
+                {/* AI bubble */}
+                <div className="flex gap-1">
+                  <div className="h-4 w-4 rounded-full shrink-0 flex items-center justify-center" style={{ background: "var(--purple)" }}>
+                    <span className="text-white" style={{ fontSize: 7 }}>A</span>
+                  </div>
+                  <div className="rounded-lg rounded-tl-none px-2 py-1.5 text-white" style={{ background: "var(--purple)", fontSize: 8, maxWidth: "85%" }}>
+                    まず、お亡くなりになられた方について教えてください。どなたが亡くなられましたか？
+                  </div>
+                </div>
+                {/* Choice buttons */}
+                <div className="flex flex-wrap gap-1 pl-5">
+                  {["父", "母", "配偶者", "その他"].map((opt) => (
+                    <div
+                      key={opt}
+                      className="rounded-full border px-2 py-0.5"
+                      style={{ fontSize: 8, borderColor: "var(--purple)", color: "var(--purple)" }}
+                    >
+                      {opt}
+                    </div>
+                  ))}
+                </div>
+                {/* User reply */}
+                <div className="flex justify-end">
+                  <div
+                    className="rounded-lg rounded-tr-none px-2 py-1.5 text-white"
+                    style={{ background: "var(--purple)", fontSize: 8 }}
+                  >
+                    父
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Input bar */}
+            <div
+              className="flex items-center gap-1 px-2 py-1.5 border-t"
+              style={{ background: "#fff", borderColor: "#e5e7eb" }}
+            >
+              <div
+                className="flex-1 rounded-full px-2 py-1"
+                style={{ background: "#f3f4f6", fontSize: 8, color: "#9ca3af" }}
+              >
+                メッセージを入力...
+              </div>
+              <div
+                className="flex h-5 w-5 items-center justify-center rounded-full text-white shrink-0"
+                style={{ background: "var(--purple)", fontSize: 9 }}
+              >
+                ↑
               </div>
             </div>
             {/* Home bar */}
-            <div className="mt-1 flex justify-center">
-              <div className="h-1 w-12 rounded-full" style={{ background: "#3D3650" }} />
+            <div className="flex justify-center py-1.5" style={{ background: "#fff" }}>
+              <div className="h-1 w-10 rounded-full" style={{ background: "#d1d5db" }} />
             </div>
           </div>
         </div>
