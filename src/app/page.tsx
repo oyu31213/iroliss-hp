@@ -119,309 +119,126 @@ function DeviceMockups() {
     { id: "C2024-003", heir: "鈴木 三郎", applicant: "鈴木 美咲 (長女)", service: "定期預金口座\n(******9012)", status: "承認待ち", statusColor: "#F3E8FF", statusText: "#9333EA", alert: "—", date: "2024-12-25", staff: "山田 太郎" },
   ];
 
-  // Inner canvas is 900px wide; scaled to fit ~500px screen area
-  const INNER_W = 900;
-  const SCREEN_W = 500; // matches max-width below minus padding
-  const scale = SCREEN_W / INNER_W;
-  const INNER_H = 620;
-  const screenH = Math.round(INNER_H * scale);
+  // MacBook: inner canvas 900×562 (16:10), rendered at scale into 476px screen
+  const LW = 900, LH = Math.round(900 * 10 / 16); // 562
+  const LS = 476 / LW; // ~0.529 → screen H ≈ 297
+
+  // iPhone: inner canvas 320×568 (9:16), rendered at scale into 128px screen
+  const PW = 320, PH = Math.round(320 * 16 / 9); // 569
+  const PS = 128 / PW; // 0.4 → screen H ≈ 228
 
   return (
-    <div className="relative flex justify-center" style={{ paddingLeft: 80 }}>
+    /* Outer wrapper — phone sticks out left, laptop fills right */
+    <div style={{ position: "relative", width: "100%", maxWidth: 600, height: 430, margin: "0 auto" }}>
 
-      {/* ── Smartphone — left, overlapping laptop ── */}
+      {/* ════ MacBook Pro 16" ════ */}
       <div
-        className="absolute z-10"
-        style={{ width: 130, left: 0, top: "50%", transform: "translateY(-46%)" }}
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          width: 516,
+          filter: "drop-shadow(0 28px 56px rgba(0,0,0,0.45)) drop-shadow(0 8px 16px rgba(0,0,0,0.2))",
+          transform: "perspective(2400px) rotateX(3deg) rotateY(-5deg)",
+        }}
       >
+        {/* ── Lid ── */}
         <div
           style={{
-            background: "#111",
-            border: "2px solid #2a2a2a",
-            borderRadius: 28,
-            boxShadow: "0 12px 40px rgba(0,0,0,0.45)",
-            overflow: "hidden",
+            position: "relative",
+            background: "linear-gradient(160deg, #dedede 0%, #cccccc 30%, #c2c2c2 65%, #b4b4b4 100%)",
+            borderRadius: "14px 14px 3px 3px",
+            padding: "11px 11px 0",
+            boxShadow:
+              "inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(0,0,0,0.12), inset 1px 0 0 rgba(255,255,255,0.3), inset -1px 0 0 rgba(0,0,0,0.1)",
           }}
         >
-          {/* Notch */}
-          <div style={{ background: "#111", display: "flex", justifyContent: "center", padding: "6px 0 4px" }}>
-            <div style={{ width: 48, height: 6, borderRadius: 3, background: "#333" }} />
+          {/* lid highlight band across top edge */}
+          <div style={{ position: "absolute", top: 0, left: "8%", right: "8%", height: 2, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent)", borderRadius: 2, pointerEvents: "none" }} />
+          {/* webcam strip */}
+          <div style={{ position: "absolute", top: 4, left: "50%", transform: "translateX(-50%)", width: 56, height: 5, borderRadius: 3, background: "#1c1c1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#282828", border: "1px solid #383838" }} />
           </div>
-          {/* Screen */}
-          <div style={{ background: "#fff" }}>
-            {/* App header */}
-            <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 10px 6px", borderBottom: "1px solid #f3f4f6" }}>
-              <div style={{ width: 20, height: 20, borderRadius: 6, background: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <span style={{ color: "#fff", fontSize: 10, fontWeight: 700 }}>S</span>
-              </div>
-              <div>
-                <div style={{ fontSize: 8, fontWeight: 700, color: "#111", lineHeight: 1.2 }}>Shinoby AIアシスタント</div>
-                <div style={{ fontSize: 6.5, color: "#9ca3af" }}>お手続きをサポートします</div>
-              </div>
-            </div>
-            {/* Chat */}
-            <div style={{ padding: "8px 8px 4px", display: "flex", flexDirection: "column", gap: 6 }}>
-              {/* AI bubble 1 */}
-              <div style={{ display: "flex", gap: 4, alignItems: "flex-start" }}>
-                <div style={{ width: 16, height: 16, borderRadius: "50%", background: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ color: "#fff", fontSize: 7 }}>A</span>
-                </div>
-                <div style={{ background: "var(--purple)", borderRadius: "0 8px 8px 8px", padding: "5px 7px", fontSize: 7.5, color: "#fff", lineHeight: 1.4, maxWidth: "85%" }}>
-                  こんにちは。Shinobyです。この度はご悲傷様でございます。
-                </div>
-              </div>
-              {/* AI bubble 2 */}
-              <div style={{ display: "flex", gap: 4, alignItems: "flex-start" }}>
-                <div style={{ width: 16, height: 16, borderRadius: "50%", background: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ color: "#fff", fontSize: 7 }}>A</span>
-                </div>
-                <div style={{ background: "var(--purple)", borderRadius: "0 8px 8px 8px", padding: "5px 7px", fontSize: 7.5, color: "#fff", lineHeight: 1.4, maxWidth: "85%" }}>
-                  お亡くなりになられた方について教えてください。
-                </div>
-              </div>
-              {/* Choices */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 4, paddingLeft: 20 }}>
-                {["父", "母", "配偶者", "その他"].map((opt) => (
-                  <div key={opt} style={{ border: "1px solid var(--purple)", borderRadius: 20, padding: "2px 8px", fontSize: 7, color: "var(--purple)" }}>
-                    {opt}
-                  </div>
-                ))}
-              </div>
-              {/* User reply */}
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <div style={{ background: "var(--purple)", borderRadius: "8px 0 8px 8px", padding: "5px 8px", fontSize: 7.5, color: "#fff" }}>
-                  父
-                </div>
-              </div>
-            </div>
-            {/* Input bar */}
-            <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 8px", borderTop: "1px solid #f3f4f6" }}>
-              <div style={{ flex: 1, background: "#f3f4f6", borderRadius: 20, padding: "4px 8px", fontSize: 7, color: "#9ca3af" }}>
-                メッセージを入力...
-              </div>
-              <div style={{ width: 18, height: 18, borderRadius: "50%", background: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 9, flexShrink: 0 }}>
-                ↑
-              </div>
-            </div>
-          </div>
-          {/* Home bar */}
-          <div style={{ background: "#fff", display: "flex", justifyContent: "center", padding: "4px 0 6px" }}>
-            <div style={{ width: 40, height: 3, borderRadius: 2, background: "#d1d5db" }} />
-          </div>
-        </div>
-      </div>
 
-      {/* ── Laptop ── */}
-      <div className="relative" style={{ maxWidth: 540, width: "100%" }}>
-        {/* Lid */}
-        <div
-          className="overflow-hidden rounded-t-2xl"
-          style={{
-            background: "linear-gradient(145deg, #e0e0e0, #c8c8c8)",
-            padding: "12px 12px 0",
-            boxShadow: "0 4px 32px rgba(0,0,0,0.3)",
-          }}
-        >
-          {/* Bezel */}
+          {/* black bezel */}
           <div
-            className="overflow-hidden rounded-t-lg"
-            style={{ background: "#1a1a1a", padding: "6px 6px 0" }}
+            style={{
+              background: "#0e0e0e",
+              borderRadius: "7px 7px 0 0",
+              padding: "14px 5px 5px",
+            }}
           >
-            {/* Screen viewport */}
-            <div style={{ height: screenH, overflow: "hidden", position: "relative" }}>
-              {/* Inner canvas at 900px, scaled down */}
-              <div
-                style={{
-                  width: INNER_W,
-                  height: INNER_H,
-                  transformOrigin: "top left",
-                  transform: `scale(${scale})`,
-                  background: "#f9fafb",
-                  fontFamily: "system-ui, sans-serif",
-                }}
-              >
-                {/* App header */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "16px 28px",
-                    background: "#fff",
-                    borderBottom: "1px solid #e5e7eb",
-                  }}
-                >
+            {/* screen viewport */}
+            <div style={{ position: "relative", height: Math.round(LH * LS), overflow: "hidden", borderRadius: 3 }}>
+              {/* glare overlay */}
+              <div style={{ position: "absolute", inset: 0, zIndex: 10, pointerEvents: "none", borderRadius: 3, background: "linear-gradient(128deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.05) 35%, transparent 65%)" }} />
+              {/* inner canvas — full resolution UI */}
+              <div style={{ width: LW, height: LH, transformOrigin: "top left", transform: `scale(${LS})`, background: "#f9fafb", fontFamily: "system-ui,-apple-system,sans-serif" }}>
+                {/* app header */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 28px", background: "#fff", borderBottom: "1px solid #e5e7eb" }}>
                   <div>
                     <div style={{ fontSize: 22, fontWeight: 700, color: "#111" }}>Shinoby</div>
-                    <div style={{ fontSize: 13, color: "#9ca3af" }}>解約・名義変更管理システム</div>
+                    <div style={{ fontSize: 12, color: "#9ca3af" }}>解約・名義変更管理システム</div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                    <div
-                      style={{
-                        display: "flex", alignItems: "center", gap: 6,
-                        border: "1px solid #d1d5db", borderRadius: 20, padding: "6px 14px",
-                        fontSize: 13, color: "#374151",
-                      }}
-                    >
+                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, border: "1px solid #d1d5db", borderRadius: 20, padding: "6px 14px", fontSize: 13, color: "#374151" }}>
                       <span>📱</span><span>遺族向け画面</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#374151" }}>
                       <span style={{ fontSize: 18 }}>👤</span>
-                      <div>
-                        <div style={{ fontSize: 11, color: "#9ca3af" }}>相続対応部</div>
-                        <div style={{ fontWeight: 500 }}>山田 太郎</div>
-                      </div>
+                      <div><div style={{ fontSize: 11, color: "#9ca3af" }}>相続対応部</div><div style={{ fontWeight: 500 }}>山田 太郎</div></div>
                     </div>
                   </div>
                 </div>
-
-                {/* Page content */}
-                <div style={{ padding: "24px 28px" }}>
-                  {/* Page title */}
-                  <div style={{ marginBottom: 20 }}>
-                    <div style={{ fontSize: 24, fontWeight: 700, color: "#111", marginBottom: 4 }}>解約手続き管理</div>
-                    <div style={{ fontSize: 14, color: "#9ca3af" }}>死亡に伴う解約・名義変更案件の一覧</div>
+                {/* page body */}
+                <div style={{ padding: "22px 28px" }}>
+                  <div style={{ marginBottom: 18 }}>
+                    <div style={{ fontSize: 24, fontWeight: 700, color: "#111", marginBottom: 3 }}>解約手続き管理</div>
+                    <div style={{ fontSize: 13, color: "#9ca3af" }}>死亡に伴う解約・名義変更案件の一覧</div>
                   </div>
-
-                  {/* Stats */}
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
+                  {/* stats */}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 11, marginBottom: 18 }}>
                     {stats.map((s) => (
-                      <div
-                        key={s.label}
-                        style={{
-                          display: "flex", alignItems: "center", gap: 12,
-                          background: "#fff", border: "1px solid #f3f4f6",
-                          borderRadius: 12, padding: "14px 16px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: 40, height: 40, borderRadius: 10, flexShrink: 0,
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            background: s.iconBg, color: s.iconColor, fontSize: 18,
-                          }}
-                        >
-                          {s.icon}
-                        </div>
-                        <div>
-                          <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 2 }}>{s.label}</div>
-                          <div style={{ fontSize: 22, fontWeight: 700, color: "#111" }}>{s.val}</div>
-                        </div>
+                      <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 11, background: "#fff", border: "1px solid #f0f0f0", borderRadius: 12, padding: "13px 15px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+                        <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: s.iconBg, fontSize: 17 }}>{s.icon}</div>
+                        <div><div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 2 }}>{s.label}</div><div style={{ fontSize: 22, fontWeight: 700, color: "#111" }}>{s.val}</div></div>
                       </div>
                     ))}
                   </div>
-
-                  {/* Tabs */}
-                  <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-                    <div
-                      style={{
-                        padding: "8px 20px", borderRadius: 20,
-                        border: "1px solid #e5e7eb", background: "#fff",
-                        fontSize: 14, color: "#374151",
-                      }}
-                    >
-                      新規申請
-                    </div>
-                    <div
-                      style={{
-                        display: "flex", alignItems: "center", gap: 8,
-                        padding: "8px 20px", borderRadius: 20,
-                        background: "#111", fontSize: 14, color: "#fff",
-                      }}
-                    >
+                  {/* tabs */}
+                  <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+                    <div style={{ padding: "8px 20px", borderRadius: 20, border: "1px solid #e5e7eb", background: "#fff", fontSize: 14, color: "#374151" }}>新規申請</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 20px", borderRadius: 20, background: "#111", fontSize: 14, color: "#fff" }}>
                       検証済みパック
-                      <span
-                        style={{
-                          width: 20, height: 20, borderRadius: "50%",
-                          background: "#22c55e", color: "#fff",
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          fontSize: 11, fontWeight: 700,
-                        }}
-                      >1</span>
+                      <span style={{ width: 20, height: 20, borderRadius: "50%", background: "#22c55e", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>1</span>
                     </div>
                   </div>
-
-                  {/* Filter bar */}
-                  <div
-                    style={{
-                      display: "flex", alignItems: "center", gap: 16,
-                      background: "#fff", border: "1px solid #e5e7eb",
-                      borderRadius: 12, padding: "10px 16px", marginBottom: 16,
-                    }}
-                  >
+                  {/* filter */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 14, background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "9px 16px", marginBottom: 14 }}>
                     <span style={{ fontSize: 14, color: "#374151" }}>ステータス：</span>
-                    <div
-                      style={{
-                        display: "flex", alignItems: "center", gap: 6,
-                        border: "1px solid #d1d5db", borderRadius: 8, padding: "4px 10px",
-                        fontSize: 14, color: "#374151",
-                      }}
-                    >
-                      すべて <span>▾</span>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, color: "#374151" }}>
-                      <div style={{ width: 14, height: 14, borderRadius: 3, background: "#374151" }} />
-                      不備ありのみ表示
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, border: "1px solid #d1d5db", borderRadius: 8, padding: "4px 10px", fontSize: 14, color: "#374151" }}>すべて <span>▾</span></div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 14, color: "#374151" }}>
+                      <div style={{ width: 13, height: 13, borderRadius: 3, background: "#374151" }} />不備ありのみ表示
                     </div>
                   </div>
-
-                  {/* Table */}
-                  <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden" }}>
-                    {/* Header */}
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "130px 100px 150px 140px 110px 60px 110px 90px 60px",
-                        background: "#f9fafb", borderBottom: "1px solid #e5e7eb",
-                        padding: "10px 16px", fontSize: 13, fontWeight: 600, color: "#6b7280",
-                      }}
-                    >
+                  {/* table */}
+                  <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "125px 95px 148px 138px 108px 55px 108px 88px 55px", background: "#f9fafb", borderBottom: "1px solid #e5e7eb", padding: "9px 16px", fontSize: 12, fontWeight: 600, color: "#6b7280" }}>
                       {["申請ID", "被相続人\n氏名", "申請者（続柄）", "対象サービス", "ステータス", "不備", "受付日", "担当者", "操作"].map((h) => (
                         <div key={h} style={{ whiteSpace: "pre-wrap", lineHeight: 1.3 }}>{h}</div>
                       ))}
                     </div>
-                    {/* Rows */}
                     {rows.map((row, i) => (
-                      <div
-                        key={row.id}
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "130px 100px 150px 140px 110px 60px 110px 90px 60px",
-                          alignItems: "center",
-                          borderBottom: i < rows.length - 1 ? "1px solid #f3f4f6" : undefined,
-                          padding: "14px 16px", fontSize: 14, color: "#111",
-                        }}
-                      >
+                      <div key={row.id} style={{ display: "grid", gridTemplateColumns: "125px 95px 148px 138px 108px 55px 108px 88px 55px", alignItems: "center", borderBottom: i < rows.length - 1 ? "1px solid #f3f4f6" : undefined, padding: "13px 16px", fontSize: 13, color: "#111" }}>
                         <div style={{ color: "#4b5563", fontWeight: 500 }}>{row.id}</div>
                         <div>{row.heir}</div>
                         <div>{row.applicant}</div>
-                        <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.4 }}>{row.service}</div>
-                        <div>
-                          <span
-                            style={{
-                              padding: "3px 10px", borderRadius: 20,
-                              background: row.statusColor, color: row.statusText,
-                              fontSize: 12, fontWeight: 500,
-                            }}
-                          >
-                            {row.status}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: 16, color: row.alert !== "—" ? "#EF4444" : "#d1d5db" }}>
-                          {row.alert}
-                        </div>
-                        <div style={{ color: "#6b7280" }}>{row.date}</div>
-                        <div>{row.staff}</div>
-                        <div>
-                          <span
-                            style={{
-                              border: "1px solid #d1d5db", borderRadius: 6,
-                              padding: "4px 10px", fontSize: 12, color: "#374151",
-                            }}
-                          >
-                            詳細
-                          </span>
-                        </div>
+                        <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.4, fontSize: 12 }}>{row.service}</div>
+                        <div><span style={{ padding: "3px 10px", borderRadius: 20, background: row.statusColor, color: row.statusText, fontSize: 11, fontWeight: 500 }}>{row.status}</span></div>
+                        <div style={{ fontSize: 15, color: row.alert !== "—" ? "#EF4444" : "#d1d5db" }}>{row.alert}</div>
+                        <div style={{ color: "#6b7280", fontSize: 12 }}>{row.date}</div>
+                        <div style={{ fontSize: 13 }}>{row.staff}</div>
+                        <div><span style={{ border: "1px solid #d1d5db", borderRadius: 6, padding: "3px 9px", fontSize: 11, color: "#374151" }}>詳細</span></div>
                       </div>
                     ))}
                   </div>
@@ -429,14 +246,135 @@ function DeviceMockups() {
               </div>
             </div>
           </div>
+
+          {/* lid surface shine */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: "14px 14px 3px 3px", background: "linear-gradient(130deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.1) 22%, transparent 55%)", pointerEvents: "none" }} />
         </div>
-        {/* Hinge */}
-        <div style={{ height: 7, background: "linear-gradient(to bottom, #c0c0c0, #a8a8a8)", boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }} />
-        {/* Base */}
+
+        {/* ── Hinge ── */}
+        <div style={{ height: 5, background: "linear-gradient(to bottom, #888, #aaa, #999)", margin: "0 3px", boxShadow: "0 1px 3px rgba(0,0,0,0.25)" }} />
+
+        {/* ── Base / keyboard deck ── */}
+        <div style={{ position: "relative", background: "linear-gradient(178deg, #d2d2d2 0%, #c6c6c6 40%, #bababa 100%)", borderRadius: "2px 2px 11px 11px", height: 28, overflow: "hidden", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.5)" }}>
+          {/* keyboard hint — horizontal key rows */}
+          <div style={{ position: "absolute", top: 4, left: "8%", right: "8%", display: "flex", flexDirection: "column", gap: 2 }}>
+            {[0.85, 1, 0.9].map((w, i) => (
+              <div key={i} style={{ height: 3, background: `repeating-linear-gradient(90deg, rgba(0,0,0,0.09) 0px, rgba(0,0,0,0.09) ${w * 13}px, transparent ${w * 13}px, transparent ${w * 13 + 3}px)`, borderRadius: 1, width: `${w * 100}%`, margin: "0 auto" }} />
+            ))}
+          </div>
+          {/* trackpad */}
+          <div style={{ position: "absolute", bottom: 4, left: "50%", transform: "translateX(-50%)", width: 86, height: 13, background: "rgba(0,0,0,0.07)", borderRadius: 4, border: "1px solid rgba(0,0,0,0.07)" }} />
+          {/* base shine */}
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0.28) 0%, transparent 55%)", pointerEvents: "none" }} />
+        </div>
+
+        {/* cast shadow beneath device */}
+        <div style={{ height: 10, background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(0,0,0,0.22) 0%, transparent 100%)", marginTop: 2 }} />
+      </div>
+
+      {/* ════ iPhone 16 Pro ════ */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 52,
+          width: 150,
+          zIndex: 20,
+          filter: "drop-shadow(-6px 24px 40px rgba(0,0,0,0.55)) drop-shadow(4px 8px 16px rgba(0,0,0,0.25))",
+          transform: "perspective(1600px) rotateX(2deg) rotateY(9deg)",
+        }}
+      >
+        {/* titanium frame ring — outer edge */}
         <div
-          className="mx-auto rounded-b-xl"
-          style={{ height: 16, width: "88%", background: "linear-gradient(to bottom, #d4d4d4, #b8b8b8)", boxShadow: "0 4px 16px rgba(0,0,0,0.25)" }}
-        />
+          style={{
+            background: "linear-gradient(155deg, #585858 0%, #2e2e2e 35%, #1a1a1a 65%, #2a2a2a 100%)",
+            borderRadius: 38,
+            padding: 3,
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.4), inset 1px 0 0 rgba(255,255,255,0.1)",
+          }}
+        >
+          {/* inner glass surface */}
+          <div style={{ background: "#0a0a0a", borderRadius: 36, overflow: "hidden", position: "relative" }}>
+            {/* status bar */}
+            <div style={{ height: 14, background: "#fff", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 14px", paddingTop: 6 }}>
+              <span style={{ fontSize: 7, fontWeight: 600, color: "#111" }}>9:41</span>
+              <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
+                <span style={{ fontSize: 6 }}>▂▄▆</span>
+                <span style={{ fontSize: 6 }}>WiFi</span>
+                <span style={{ fontSize: 6 }}>🔋</span>
+              </div>
+            </div>
+
+            {/* Dynamic Island */}
+            <div style={{ position: "absolute", top: 6, left: "50%", transform: "translateX(-50%)", width: 54, height: 14, background: "#000", borderRadius: 9, zIndex: 30 }} />
+
+            {/* screen area */}
+            <div style={{ position: "relative", background: "#fff", height: Math.round(PH * PS) }}>
+              {/* glare */}
+              <div style={{ position: "absolute", inset: 0, zIndex: 10, pointerEvents: "none", background: "linear-gradient(130deg, rgba(255,255,255,0.12) 0%, transparent 50%)" }} />
+              {/* inner chat canvas */}
+              <div style={{ width: PW, height: PH, transformOrigin: "top left", transform: `scale(${PS})`, background: "#fff", fontFamily: "system-ui,-apple-system,sans-serif" }}>
+                {/* chat app header */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 14px 12px", borderBottom: "1px solid #f0f0f0" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: "#5B3D8A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <span style={{ color: "#fff", fontSize: 16, fontWeight: 700 }}>S</span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: "#111" }}>Shinoby AIアシスタント</div>
+                    <div style={{ fontSize: 11, color: "#9ca3af" }}>お手続きをサポートします</div>
+                  </div>
+                </div>
+                {/* chat messages */}
+                <div style={{ padding: "14px 12px", display: "flex", flexDirection: "column", gap: 12 }}>
+                  {/* ai */}
+                  <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                    <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#5B3D8A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <span style={{ color: "#fff", fontSize: 12 }}>A</span>
+                    </div>
+                    <div style={{ background: "#5B3D8A", borderRadius: "0 14px 14px 14px", padding: "10px 14px", fontSize: 13, color: "#fff", lineHeight: 1.5, maxWidth: "82%" }}>
+                      こんにちは。Shinobyです。この度はご悲傷様でございます。お手続きのお手伝いをさせていただきます。
+                    </div>
+                  </div>
+                  {/* ai */}
+                  <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                    <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#5B3D8A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <span style={{ color: "#fff", fontSize: 12 }}>A</span>
+                    </div>
+                    <div style={{ background: "#5B3D8A", borderRadius: "0 14px 14px 14px", padding: "10px 14px", fontSize: 13, color: "#fff", lineHeight: 1.5, maxWidth: "82%" }}>
+                      まず、お亡くなりになられた方について教えてください。
+                    </div>
+                  </div>
+                  {/* choice buttons */}
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, paddingLeft: 34 }}>
+                    {["父", "母", "配偶者", "その他の家族"].map((opt) => (
+                      <div key={opt} style={{ border: "1.5px solid #5B3D8A", borderRadius: 20, padding: "5px 14px", fontSize: 12, color: "#5B3D8A" }}>{opt}</div>
+                    ))}
+                  </div>
+                  {/* user */}
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <div style={{ background: "#5B3D8A", borderRadius: "14px 0 14px 14px", padding: "10px 16px", fontSize: 13, color: "#fff" }}>父</div>
+                  </div>
+                </div>
+                {/* input bar */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", borderTop: "1px solid #f0f0f0" }}>
+                  <div style={{ flex: 1, background: "#f3f4f6", borderRadius: 22, padding: "8px 14px", fontSize: 12, color: "#9ca3af" }}>メッセージを入力...</div>
+                  <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#5B3D8A", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 14, flexShrink: 0 }}>↑</div>
+                </div>
+              </div>
+            </div>
+
+            {/* home indicator */}
+            <div style={{ height: 20, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: 44, height: 4, borderRadius: 2, background: "#111" }} />
+            </div>
+          </div>
+
+          {/* frame shine */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: 38, background: "linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 40%)", pointerEvents: "none" }} />
+        </div>
+
+        {/* cast shadow */}
+        <div style={{ height: 10, background: "radial-gradient(ellipse 70% 100% at 50% 0%, rgba(0,0,0,0.3) 0%, transparent 100%)", marginTop: 2 }} />
       </div>
     </div>
   );
