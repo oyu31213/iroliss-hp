@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 
+type InquiryType =
+  | "お問い合わせ"
+  | "資料請求"
+  | "導入について相談する"
+  | "デモを申し込む";
+
 // ─── Logo ────────────────────────────────────────────────────
 function Logo() {
   return (
@@ -17,7 +23,7 @@ function Logo() {
 }
 
 // ─── Nav ─────────────────────────────────────────────────────
-function Nav() {
+function Nav({ onOpen }: { onOpen: (type: InquiryType) => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -47,13 +53,13 @@ function Nav() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#contact"
+          <button
+            onClick={() => onOpen("お問い合わせ")}
             className="rounded-full px-5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-80"
             style={{ background: "var(--purple)" }}
           >
             お問い合わせ
-          </a>
+          </button>
         </div>
 
         {/* Hamburger */}
@@ -91,14 +97,16 @@ function Nav() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#contact"
+          <button
             className="mt-3 inline-block rounded-full px-5 py-2 text-sm font-medium text-white"
             style={{ background: "var(--purple)" }}
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {
+              setMenuOpen(false);
+              onOpen("お問い合わせ");
+            }}
           >
             お問い合わせ
-          </a>
+          </button>
         </div>
       )}
     </nav>
@@ -347,8 +355,291 @@ function DeviceMockups() {
   );
 }
 
+// ─── Contact Modal ─────────────────────────────────────────────
+const INQUIRY_TYPES: InquiryType[] = [
+  "お問い合わせ",
+  "資料請求",
+  "導入について相談する",
+  "デモを申し込む",
+];
+
+const EMPLOYEE_OPTIONS = [
+  "〜50名",
+  "51〜200名",
+  "201〜500名",
+  "501〜1,000名",
+  "1,001名以上",
+];
+
+function ContactModal({
+  initialType,
+  onClose,
+}: {
+  initialType: InquiryType;
+  onClose: () => void;
+}) {
+  const [type, setType] = useState<InquiryType>(initialType);
+  const [company, setCompany] = useState("");
+  const [department, setDepartment] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [employees, setEmployees] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, company, department, name, email, phone, employees, message }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "送信に失敗しました");
+      } else {
+        setDone(true);
+      }
+    } catch {
+      setError("ネットワークエラーが発生しました。再度お試しください。");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const inputClass =
+    "w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-100";
+  const inputStyle = { borderColor: "var(--il-border)", color: "var(--ink)" };
+
+  return (
+    /* overlay */
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)" }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div
+        className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-8 shadow-2xl"
+        style={{ background: "var(--bg-white)" }}
+      >
+        {/* close */}
+        <button
+          onClick={onClose}
+          className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full text-lg transition hover:opacity-70"
+          style={{ color: "var(--ink-sub)", background: "var(--bg)" }}
+          aria-label="閉じる"
+        >
+          ✕
+        </button>
+
+        {done ? (
+          /* ── 送信完了 ── */
+          <div className="py-8 text-center">
+            <div
+              className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full text-3xl"
+              style={{ background: "var(--purple-light)" }}
+            >
+              ✓
+            </div>
+            <h3 className="mb-2 text-xl font-bold" style={{ color: "var(--ink)" }}>
+              送信が完了しました
+            </h3>
+            <p className="mb-6 text-sm leading-relaxed" style={{ color: "var(--ink-sub)" }}>
+              お問い合わせありがとうございます。
+              <br />
+              内容を確認の上、担当者よりご連絡いたします。
+            </p>
+            <button
+              onClick={onClose}
+              className="rounded-full px-8 py-3 text-sm font-medium text-white transition-opacity hover:opacity-80"
+              style={{ background: "var(--purple)" }}
+            >
+              閉じる
+            </button>
+          </div>
+        ) : (
+          /* ── フォーム ── */
+          <>
+            <div className="mb-6">
+              <span
+                className="mb-2 inline-block rounded-full px-3 py-0.5 text-xs font-bold uppercase tracking-widest"
+                style={{ background: "var(--purple-light)", color: "var(--purple)" }}
+              >
+                Contact
+              </span>
+              <h2 className="text-xl font-bold" style={{ color: "var(--ink)" }}>
+                お問い合わせ
+              </h2>
+              <p className="mt-1 text-sm" style={{ color: "var(--ink-sub)" }}>
+                貴社の課題に合わせてご提案します。お気軽にどうぞ。
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* 種別 */}
+              <div>
+                <label className="mb-1 block text-xs font-semibold" style={{ color: "var(--ink-sub)" }}>
+                  お問い合わせ種別<span className="ml-1 text-red-500">*</span>
+                </label>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value as InquiryType)}
+                  className={inputClass}
+                  style={inputStyle}
+                  required
+                >
+                  {INQUIRY_TYPES.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* 会社名 */}
+              <div>
+                <label className="mb-1 block text-xs font-semibold" style={{ color: "var(--ink-sub)" }}>
+                  会社名<span className="ml-1 text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  placeholder="株式会社〇〇銀行"
+                  className={inputClass}
+                  style={inputStyle}
+                  required
+                />
+              </div>
+
+              {/* 部署名 */}
+              <div>
+                <label className="mb-1 block text-xs font-semibold" style={{ color: "var(--ink-sub)" }}>
+                  部署名
+                </label>
+                <input
+                  type="text"
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                  placeholder="相続対応部"
+                  className={inputClass}
+                  style={inputStyle}
+                />
+              </div>
+
+              {/* 担当者名 */}
+              <div>
+                <label className="mb-1 block text-xs font-semibold" style={{ color: "var(--ink-sub)" }}>
+                  担当者名<span className="ml-1 text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="山田 太郎"
+                  className={inputClass}
+                  style={inputStyle}
+                  required
+                />
+              </div>
+
+              {/* メール・電話 */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs font-semibold" style={{ color: "var(--ink-sub)" }}>
+                    メールアドレス<span className="ml-1 text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="yamada@example.com"
+                    className={inputClass}
+                    style={inputStyle}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold" style={{ color: "var(--ink-sub)" }}>
+                    電話番号
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="03-0000-0000"
+                    className={inputClass}
+                    style={inputStyle}
+                  />
+                </div>
+              </div>
+
+              {/* 従業員規模 */}
+              <div>
+                <label className="mb-1 block text-xs font-semibold" style={{ color: "var(--ink-sub)" }}>
+                  従業員規模
+                </label>
+                <select
+                  value={employees}
+                  onChange={(e) => setEmployees(e.target.value)}
+                  className={inputClass}
+                  style={inputStyle}
+                >
+                  <option value="">選択してください</option>
+                  {EMPLOYEE_OPTIONS.map((o) => (
+                    <option key={o} value={o}>{o}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* メッセージ */}
+              <div>
+                <label className="mb-1 block text-xs font-semibold" style={{ color: "var(--ink-sub)" }}>
+                  ご質問・ご要望
+                </label>
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  rows={4}
+                  placeholder="現在の手続きフローや課題について、ご自由にお書きください。"
+                  className={inputClass}
+                  style={{ ...inputStyle, resize: "vertical" }}
+                />
+              </div>
+
+              {/* エラー */}
+              {error && (
+                <p className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-600">
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-full py-3 text-sm font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-50"
+                style={{ background: "var(--purple)" }}
+              >
+                {loading ? "送信中..." : "送信する"}
+              </button>
+
+              <p className="text-center text-xs" style={{ color: "var(--ink-sub)" }}>
+                送信後、info@iroliss.com より返信いたします。
+              </p>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Hero ─────────────────────────────────────────────────────
-function Hero() {
+function Hero({ onOpen }: { onOpen: (type: InquiryType) => void }) {
   return (
     <section className="px-6 py-20 md:py-28" style={{ background: "var(--purple)" }}>
       <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
@@ -373,19 +664,19 @@ function Hero() {
             遺族対応の非効率を、構造から解決します。
           </p>
           <div className="flex flex-wrap gap-3">
-            <a
-              href="mailto:info@iroliss.com"
+            <button
+              onClick={() => onOpen("資料請求")}
               className="rounded-full bg-white px-6 py-3 text-sm font-medium transition-opacity hover:opacity-80"
               style={{ color: "var(--purple)" }}
             >
               資料請求
-            </a>
-            <a
-              href="mailto:demo@iroliss.com"
+            </button>
+            <button
+              onClick={() => onOpen("デモを申し込む")}
               className="rounded-full border-2 border-white px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-80"
             >
               デモを申し込む
-            </a>
+            </button>
           </div>
         </div>
 
@@ -430,7 +721,7 @@ function TargetBand() {
 }
 
 // ─── Pilot Banner ─────────────────────────────────────────────
-function PilotBanner() {
+function PilotBanner({ onOpen }: { onOpen: (type: InquiryType) => void }) {
   return (
     <section className="px-6 py-8" style={{ background: "var(--green-light)" }}>
       <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -449,13 +740,13 @@ function PilotBanner() {
             まずはオンラインで30分、現状の課題をお聞かせください。
           </p>
         </div>
-        <a
-          href="mailto:info@iroliss.com"
+        <button
+          onClick={() => onOpen("導入について相談する")}
           className="shrink-0 rounded-full px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-80"
           style={{ background: "var(--green)" }}
         >
           導入について相談する →
-        </a>
+        </button>
       </div>
     </section>
   );
@@ -682,7 +973,7 @@ function About() {
 }
 
 // ─── Contact ──────────────────────────────────────────────────
-function Contact() {
+function Contact({ onOpen }: { onOpen: (type: InquiryType) => void }) {
   return (
     <section id="contact" className="px-6 py-20" style={{ background: "var(--bg-white)" }}>
       <div className="mx-auto max-w-6xl">
@@ -713,19 +1004,19 @@ function Contact() {
             まずはお気軽にご連絡ください。貴社の課題に合わせてご提案します。
           </p>
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <a
-              href="mailto:info@iroliss.com"
+            <button
+              onClick={() => onOpen("資料請求")}
               className="rounded-full bg-white px-8 py-3 text-sm font-medium transition-opacity hover:opacity-80"
               style={{ color: "var(--purple)" }}
             >
               資料請求
-            </a>
-            <a
-              href="mailto:demo@iroliss.com"
+            </button>
+            <button
+              onClick={() => onOpen("デモを申し込む")}
               className="rounded-full border-2 border-white px-8 py-3 text-sm font-medium text-white transition-opacity hover:opacity-80"
             >
               デモを申し込む
-            </a>
+            </button>
           </div>
           <p className="mt-6 text-xs" style={{ color: "#C4B0E8" }}>
             info@iroliss.com
@@ -763,18 +1054,32 @@ function Footer() {
 
 // ─── Page ─────────────────────────────────────────────────────
 export default function Page() {
+  const [modalType, setModalType] = useState<InquiryType | null>(null);
+
+  function openModal(type: InquiryType) {
+    setModalType(type);
+  }
+
+  function closeModal() {
+    setModalType(null);
+  }
+
   return (
     <main className="font-noto" style={{ background: "var(--bg)", color: "var(--ink)" }}>
-      <Nav />
-      <Hero />
+      <Nav onOpen={openModal} />
+      <Hero onOpen={openModal} />
       <TargetBand />
-      <PilotBanner />
+      <PilotBanner onOpen={openModal} />
       <Pain />
       <Features />
       <Flow />
       <About />
-      <Contact />
+      <Contact onOpen={openModal} />
       <Footer />
+
+      {modalType && (
+        <ContactModal initialType={modalType} onClose={closeModal} />
+      )}
     </main>
   );
 }
