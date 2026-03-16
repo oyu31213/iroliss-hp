@@ -15,9 +15,25 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Iroliss Inc. — 相続・解約手続き SaaS「Shinoby」",
+  title: "Shinoby | 相続・解約手続き SaaS — Iroliss Inc.",
   description:
     "差し戻し、ゼロへ。書類不備・来店対応・繰り返しの確認連絡を構造から解決する、金融機関向け死後手続き自動化SaaS。",
+  metadataBase: new URL("https://iroliss.com"),
+  openGraph: {
+    title: "Shinoby | 相続・解約手続き SaaS — Iroliss Inc.",
+    description:
+      "差し戻し、ゼロへ。書類不備・来店対応・繰り返しの確認連絡を構造から解決する、金融機関向け死後手続き自動化SaaS。",
+    url: "https://iroliss.com",
+    siteName: "Iroliss Inc.",
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shinoby | 相続・解約手続き SaaS — Iroliss Inc.",
+    description:
+      "差し戻し、ゼロへ。書類不備・来店対応・繰り返しの確認連絡を構造から解決する、金融機関向け死後手続き自動化SaaS。",
+  },
 };
 
 export default function RootLayout({

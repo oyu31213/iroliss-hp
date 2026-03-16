@@ -1037,10 +1037,10 @@ function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 text-sm sm:flex-row sm:justify-between">
         <Logo />
         <div className="flex gap-6">
-          <a href="mailto:info@iroliss.com" className="transition-opacity hover:opacity-70" style={{ color: "var(--ink-sub)" }}>
+          <a href="mailto:info@iroliss.com?subject=採用について" className="transition-opacity hover:opacity-70" style={{ color: "var(--ink-sub)" }}>
             採用情報
           </a>
-          <a href="mailto:info@iroliss.com" className="transition-opacity hover:opacity-70" style={{ color: "var(--ink-sub)" }}>
+          <a href="#contact" className="transition-opacity hover:opacity-70" style={{ color: "var(--ink-sub)" }}>
             プライバシーポリシー
           </a>
         </div>
