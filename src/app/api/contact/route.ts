@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         from: "Iroliss LP <noreply@iroliss.com>",
-        to: "info@iroliss.com",
+        to: "yui.oya@iroliss.com",
         reply_to: email,
         subject: `【${type}】${company}・${name}様`,
         html,
